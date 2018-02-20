@@ -23,9 +23,13 @@ router.get('/', async function (req, res) {
     })
 });
 
-router.post('/save-emoji', function (req, res, next) {
+router.post('/save-emoji', async function (req, res, next) {
     let {body} = req;
 
+    let posterApi = new PosterApi({account: body.account, token: body.token});
+    let result = await posterApi.setEntityExtras('settings', {emoji: body.emoji});
+
+    res.render('index', body);
 });
 
 

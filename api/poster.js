@@ -10,19 +10,38 @@ class PosterApi {
         this.account = props.account;
     }
 
-    static makePosterRequest(method, type, params) {
+    /**
+     * Метод делает запрос к API Poster при помощи токена и аккаунта
+     * @param method {String} poster API method name
+     * @param type {String} GET or POST
+     * @param params {Object} GET or POST params to method
+     * @return {Promise<*>}
+     */
+    makePosterRequest(method, type, params = {}) {
         let options = {
             method: type.toUpperCase(),
-            url: 'http://joinposter.com/api/' + method,
+            url: `https://${this.account}.joinposter.com/api/${method}?token=${this.token}&`,
         };
 
-        if (params) {
-            options.url += '?' + querystring.encode(params.params)
+        if (options.method === 'GET') {
+            options.url += querystring.encode(params);
+        } else {
+            options.json = params.body;
         }
 
         return new Promise((resolve, reject) => {
             request(options, (err, response, body) => {
-                body = JSON.parse(body);
+                if (err) {
+                    reject(err);
+                }
+
+                if (typeof body === 'string') {
+                    body = JSON.parse(body);
+                }
+                // В большинстве методов API Poster ответ приходит в объекте response
+                if (body && body.response) {
+                    body = body.response;
+                }
                 resolve(body);
             });
         });
@@ -48,8 +67,12 @@ class PosterApi {
     }
 
     getAllSettings() {
-        return PosterApi.makePosterRequest('settings.getAllSettings', 'GET', {
-            params: {account: this.account, token: this.token},
+        return this.makePosterRequest('settings.getAllSettings', 'GET');
+    }
+
+    setEntityExtras(entity, extras, entityId) {
+        return this.makePosterRequest('application.setEntityExtras', 'POST', {
+            body: {entity_type: entity, extras: extras, entity_id: entityId}
         });
     }
 }
