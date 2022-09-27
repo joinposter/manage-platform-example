@@ -14,7 +14,7 @@
 
 1. Склонируйте проект 
 
-2. Введите свой `applicationId` и `secret` в файле `config.json`
+2. Введите свой `applicationId` и `applicationSecret` в файле `config.js`
 
 4. В настройках Poster укажите ссылку для загрузки iFrame `http://localhost:8090`
 

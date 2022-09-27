@@ -53,10 +53,10 @@ class PosterApi {
                 method: 'POST',
                 url: 'https://joinposter.com/api/auth/manage',
                 form: {
-                    client_id: config.clientId,
-                    client_secret: config.clientSecret,
+                    application_id: config.applicationId,
+                    application_secret: config.applicationSecret,
                     code: code,
-                    verify: md5([config.clientId, config.clientSecret, code].join(':')),
+                    verify: md5([config.applicationId, config.applicationSecret, code].join(':')),
                 }
             }, (err, response, body) => {
                 body = JSON.parse(body);

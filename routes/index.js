@@ -5,8 +5,8 @@ var router = new express.Router();
 var PosterApi = require('../api/poster');
 
 
-router.get('/', async function (req, res) {
-    let {code} = req.query;
+router.get('/:code', async function (req, res) {
+    let {code} = req.params.code;
     let user = await PosterApi.auth(code);
     let auth = {
         token: user.access_token,
